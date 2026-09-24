@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>International Business — Banker Desk</title>
+<style>
+  :root{
+    --navy:#0d1426; --navy2:#10182b; --ink:#11182c; --muted:#71809a;
+    --blue:#19a9e8; --blue2:#66c8f5; --green:#11a875; --purple:#8a45ef;
+    --orange:#d8830a; --red:#e51d52; --line:#dfe5ee; --card:#fff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f8fc;color:var(--ink)}
+  button,input,select{font:inherit}
+  button{cursor:pointer}
+  .hidden{display:none!important}
+  .setup{
+    min-height:100vh;color:#fff;background:
+      radial-gradient(circle at 80% 10%,rgba(31,170,231,.16),transparent 28%),
+      radial-gradient(circle at 10% 85%,rgba(209,115,31,.12),transparent 28%),#070e1a;
+    padding:48px 5vw 70px;
+  }
+  .setup-head,.app-head{display:flex;align-items:center;gap:18px}
+  .brand-icon{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;background:#10293c;border:1px solid #245570;color:#5ecbfa;font-size:28px}
+  .brand-icon.light{background:#17a9e8;color:#fff;border:0;box-shadow:0 8px 24px rgba(25,169,232,.25)}
+  .eyebrow{font-size:13px;letter-spacing:4px;font-weight:700;color:#55c3f2}
+  .sub-eyebrow{font-size:13px;letter-spacing:3px;color:#6e7d98;margin-top:7px}
+  .ready{margin-left:auto;border:1px solid #7d722d;background:rgba(146,125,20,.12);color:#e9dc79;border-radius:24px;padding:12px 20px;letter-spacing:3px;font-size:12px}
+  .hero{max-width:1100px;margin:78px auto 0}
+  .hero-kicker{color:#65c9f7;letter-spacing:5px;font-size:14px}
+  h1{font-size:clamp(48px,8vw,92px);line-height:.96;margin:34px 0 42px;letter-spacing:-5px;max-width:900px}
+  h1 span{color:#61c5f4}
+  .hero p{color:#96a5bd;font-size:21px;line-height:1.75;max-width:780px}
+  .stats{display:flex;gap:0;margin-top:55px}
+  .stat{padding:0 42px 0 20px;border-left:1px solid #344054}
+  .stat:first-child{padding-left:20px}.stat label{display:block;color:#65748e;font-size:12px;letter-spacing:2px}.stat strong{display:block;margin-top:10px;font-size:20px}
+  .setup-card{max-width:1100px;margin:55px auto 0;border:1px solid #2c3444;background:rgba(24,28,39,.85);border-radius:28px;padding:40px}
+  .step{color:#64c9f7;letter-spacing:4px;font-size:13px}.setup-card h2{font-size:32px;margin:15px 0 25px}
+  .player-row{display:flex;gap:15px;align-items:center;margin:14px 0}
+  .pill{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;border:1px solid #149fdd;color:#54c7f4}
+  .pill.green{border-color:#0a9d77;color:#18bf91}
+  .player-row input{flex:1;background:#0c111c;border:1px solid #2c3341;color:white;padding:18px 20px;border-radius:30px;outline:0}
+  .x{background:none;border:0;color:#65738b;font-size:24px}.setup-actions{display:flex;gap:18px;margin-top:28px}
+  .outline,.primary{border-radius:28px;padding:16px 25px;border:1px solid #334052;background:transparent;color:#a7b3c8;flex:1}
+  .primary{background:#4a7f9c;border-color:#4a7f9c;color:#071421;font-weight:700}
+  .primary.disabled{background:#31465a;border-color:#31465a;color:#718398;opacity:.72;cursor:not-allowed}
+  .primary.ready{background:#20b9f2;border-color:#20b9f2;color:#06131e;box-shadow:0 8px 24px rgba(32,185,242,.28);opacity:1;cursor:pointer}
+  .small-note{text-align:center;color:#50617b;font-size:13px;margin-top:20px}
+
+  .app{min-height:100vh;background:#f7f9fc}.app-head{position:sticky;top:0;z-index:10;background:rgba(249,251,253,.96);backdrop-filter:blur(14px);padding:20px 4vw;border-bottom:1px solid #e1e7ef}
+  .app-brand h3{margin:0;font-size:20px;letter-spacing:3px}.app-brand p{margin:5px 0 0;color:#77869d;letter-spacing:3px;font-size:12px}
+  .saved{margin-left:auto;color:#199b78;font-size:14px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#12b67e;margin-right:8px}
+  .head-btn{border:1px solid #dce3ec;background:#fff;border-radius:18px;padding:12px 16px;color:#66758c}
+  .restart{color:#e51d52;border-color:#efb3c5;background:#fff}
+  .container{max-width:1080px;margin:auto;padding:42px 24px 80px}
+  .topline{color:#1da9e7;letter-spacing:4px;font-size:13px}.title{font-size:56px;letter-spacing:-3px;margin:16px 0 10px}.desc{color:#718098;font-size:18px;margin:0 0 30px}
+  .add-player{width:100%;border:0;background:#10182b;color:#fff;padding:20px;border-radius:28px;font-size:18px;margin-bottom:42px}
+  .card{background:#fff;border:1px solid #dfe6ef;border-radius:28px;padding:34px;box-shadow:0 10px 35px rgba(20,30,50,.05);margin:24px 0}
+  .vault{border-color:#f0d7a4;background:linear-gradient(135deg,#fff,#fffdf7)}
+  .card-kicker{font-size:13px;letter-spacing:4px;color:#76849a}.money{font-size:64px;letter-spacing:-3px;margin:18px 0 0;font-weight:600}.muted{color:#748198}.card-line{height:1px;background:#e9edf3;margin:28px 0}
+  .green-badge{float:right;color:#15956e;border:1px solid #a9dfcc;background:#edfaf4;border-radius:20px;padding:9px 16px;font-size:12px;letter-spacing:2px}
+  .progress{height:9px;background:#edf1f5;border-radius:10px;overflow:hidden;margin-top:24px}.progress i{display:block;width:24%;height:100%;background:#18a9e7;border-radius:10px}
+  .purple-card{background:#faf8ff;border-color:#dfcffc}.purple{color:#8741e8}
+  .section-title{font-size:28px;margin:0}.section-head{display:flex;justify-content:space-between;align-items:center;margin:42px 0 18px}.seats{color:#738097}
+  .player-card{padding:30px}.player-top{display:flex;align-items:center;gap:15px}.avatar{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:#eefaff;color:#27a9e3;border:1px solid #b7e5f8;font-weight:700}.avatar.g{background:#eefbf7;color:#12a77c;border-color:#b4ead9}
+  .player-name{font-size:22px;font-weight:700}.loan-state{font-size:12px;color:#75839a;letter-spacing:1px;margin-top:5px}
+  .trash{margin-left:auto;border:0;background:none;color:#68778e;font-size:21px}.cash-row{display:flex;justify-content:space-between;align-items:end;gap:15px;margin-top:28px}.cash{font-size:38px}.action-row{display:flex;gap:14px;margin-top:22px}.action{flex:1;border:1px solid #dfe5ed;background:#fff;border-radius:20px;padding:14px;color:#1c2639}.loan{background:#f6edff;border-color:#ead7ff;color:#8641e8}.repay{background:#fffaf1;color:#d4a16c}
+  .ledger-tools{display:flex;gap:12px;margin:18px 0}.search,.filter{background:#fff;border:1px solid #d7dfe9;border-radius:22px;padding:15px 18px;outline:0}.search{flex:1}
+  .movement{background:#fff;border:1px solid #dce3ec;border-radius:24px;overflow:hidden}.movement-head,.movement-item{display:flex;justify-content:space-between;padding:20px 26px}.movement-head{color:#738198;font-size:12px;letter-spacing:2px;border-bottom:1px solid #e4e9f0}.movement-item{border-bottom:1px solid #e8edf2;align-items:center}.movement-item:last-child{border:0}.move-left{display:flex;gap:14px;align-items:center}.move-icon{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#eafaf5;color:#0a9c70}.move-title{font-size:17px}.move-sub{color:#728097;margin-top:5px}.amount{color:#079b6c;font-size:18px;font-weight:700;text-align:right}.time{display:block;color:#748198;font-size:12px;font-weight:400;margin-top:4px}
+  .toolbar{display:flex;gap:10px}.toolbar .head-btn{padding:12px 14px}
+  .modal{position:fixed;inset:0;background:rgba(4,10,20,.55);display:grid;place-items:center;z-index:30;padding:20px}.modal-box{width:min(520px,100%);background:#fff;border-radius:28px;padding:30px;box-shadow:0 30px 90px rgba(0,0,0,.3)}.modal-box h2{margin-top:0}.modal-box input,.modal-box select{width:100%;padding:15px;border:1px solid #dce3eb;border-radius:15px;margin:8px 0 16px;outline:0}.modal-actions{display:flex;gap:10px}.modal-actions button{flex:1}
+  @media(max-width:700px){
+    .setup{padding:28px 18px 50px}.setup-head{align-items:flex-start}.ready{display:none}.hero{margin-top:55px}h1{font-size:54px;letter-spacing:-3px}.hero p{font-size:17px}.stats{flex-wrap:wrap;gap:25px}.stat{padding-right:20px}.setup-card{padding:24px;border-radius:22px}
+    .app-head{padding:14px 16px}.saved{display:none}.app-brand h3{font-size:16px}.app-brand p{font-size:9px}.head-btn{padding:9px 11px}.container{padding:30px 15px 60px}.title{font-size:42px}.desc{font-size:16px}.card{padding:24px;border-radius:22px}.money{font-size:48px}.action-row{flex-direction:column}.ledger-tools{flex-direction:column}.filter{width:100%}
+  }
+
+  body.dark{background:#070d18;color:#e9eef7}
+  body.dark .app{background:#070d18}
+  body.dark .app-head{background:rgba(10,17,30,.96);border-color:#263246}
+  body.dark .app-brand h3{color:#f2f6fc}
+  body.dark .app-brand p,body.dark .saved,body.dark .desc,body.dark .muted,body.dark .seats{color:#91a0b7}
+  body.dark .head-btn{background:#101a2b;border-color:#2d3a50;color:#c4cfdf}
+  body.dark .restart{border-color:#713047;color:#ff6b91;background:#21111a}
+  body.dark .title,body.dark .section-title{color:#f4f7fb}
+  body.dark .card{background:#0e1727;border-color:#263348;box-shadow:0 12px 35px rgba(0,0,0,.25)}
+  body.dark .vault{background:linear-gradient(135deg,#111b2b,#171a22);border-color:#65562f}
+  body.dark .purple-card{background:#151124;border-color:#403061}
+  body.dark .card-line{background:#263247}
+  body.dark .cash,.money{color:#f2f6fc}
+  body.dark .progress{background:#1d293b}
+  body.dark .player-card{background:#0e1727}
+  body.dark .avatar{background:#102536;border-color:#28536d}
+  body.dark .avatar.g{background:#102a25;border-color:#276451}
+  body.dark .player-name{color:#f3f6fb}
+  body.dark .action{background:#101a2a;border-color:#2b394e;color:#dce5f2}
+  body.dark .loan{background:#211633;border-color:#4b326d;color:#bf94ff}
+  body.dark .repay{background:#292014;border-color:#5a4529;color:#e2b47e}
+  body.dark .movement{background:#0e1727;border-color:#263348}
+  body.dark .movement-head{border-color:#263247;color:#8e9db4}
+  body.dark .movement-item{border-color:#222e42}
+  body.dark .move-title{color:#edf2f8}
+  body.dark .move-sub{color:#8291a9}
+  body.dark .search,body.dark .filter{background:#101a2b;border-color:#2c394e;color:#e5ebf4}
+  body.dark .modal-box{background:#101a2a;color:#edf2f8}
+  body.dark .modal-box input,body.dark .modal-box select{background:#0b1422;border-color:#2b394e;color:#edf2f8}
+  body.dark .modal-actions .outline{background:#101a2a;color:#dce5f2}
+  body.dark .purple{color:#b88aff}
+  body.dark .topline,.dark .card-kicker{color:#69caf5}
+
+
+  /* Light-mode readability fixes */
+  body:not(.dark) .money,
+  body:not(.dark) .cash,
+  body:not(.dark) #bankBalance,
+  body:not(.dark) #cashInPlay,
+  body:not(.dark) #exposure,
+  body:not(.dark) .player-name{
+    color:#111827 !important;
+  }
+  body:not(.dark) .card .muted,
+  body:not(.dark) .card-line + .muted{
+    color:#4b5563 !important;
+  }
+
+
+  /* Enhanced responsive layout */
+  html{width:100%;overflow-x:hidden}
+  body{width:100%;min-width:0;overflow-x:hidden}
+  img,svg{max-width:100%}
+  button,input,select{max-width:100%}
+
+  @media (max-width: 900px){
+    .setup{padding:32px 24px 55px}
+    .hero{margin-top:55px}
+    .hero p{max-width:100%}
+    .stats{flex-wrap:wrap;gap:24px}
+    .stat{padding-left:18px;padding-right:24px}
+    .container{max-width:760px}
+    .app-head{padding:16px 22px}
+    .saved{font-size:12px}
+  }
+
+  @media (max-width: 650px){
+    .setup{padding:22px 14px 42px}
+    .setup-head{gap:11px}
+    .setup-head .brand-icon{width:48px;height:48px;font-size:22px}
+    .eyebrow{font-size:10px;letter-spacing:2px}
+    .sub-eyebrow{font-size:9px;letter-spacing:1.5px}
+    .hero{margin-top:42px}
+    .hero-kicker{font-size:10px;letter-spacing:2.5px}
+    h1{font-size:clamp(43px,14vw,62px);letter-spacing:-3px;margin:22px 0 26px}
+    .hero p{font-size:15px;line-height:1.6}
+    .stats{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:30px}
+    .stat{padding:0 0 0 13px}
+    .stat:last-child{grid-column:1/-1}
+    .stat strong{font-size:17px}
+    .setup-card{margin-top:32px;padding:20px;border-radius:20px}
+    .setup-card h2{font-size:25px}
+    .player-row{gap:8px}
+    .pill{width:46px;height:46px;flex:0 0 46px}
+    .player-row input{min-width:0;padding:14px 15px}
+    .setup-actions{flex-direction:column}
+    .setup-actions button{width:100%}
+
+    .app-head{position:relative;padding:12px 12px;gap:9px;align-items:center}
+    .app-head .brand-icon{width:42px;height:42px;flex:0 0 42px}
+    .app-brand{min-width:0;flex:1}
+    .app-brand h3{font-size:12px;letter-spacing:1.5px;white-space:nowrap}
+    .app-brand p{font-size:7px;letter-spacing:1.5px;white-space:nowrap}
+    .saved{display:none}
+    .toolbar{gap:5px}
+    .toolbar .head-btn{padding:9px 9px;border-radius:13px}
+    .toolbar .restart{font-size:0}
+    .toolbar .restart::before{content:"↻";font-size:16px}
+
+    .container{width:100%;padding:25px 12px 45px}
+    .topline{font-size:10px;letter-spacing:2px}
+    .title{font-size:38px;line-height:1.02;letter-spacing:-2px;margin:12px 0 8px}
+    .desc{font-size:14px;line-height:1.55;margin-bottom:22px}
+    .add-player{font-size:15px;padding:16px 14px;border-radius:20px;margin-bottom:26px}
+    .card{padding:20px;border-radius:20px;margin:16px 0}
+    .card-kicker{font-size:10px;letter-spacing:2px}
+    .money{font-size:40px;letter-spacing:-2px;margin-top:13px}
+    .card-line{margin:20px 0}
+    .green-badge{font-size:9px;padding:7px 10px}
+    .purple-card .money{font-size:38px}
+
+    .section-head{gap:10px;margin:30px 0 14px}
+    .section-head .head-btn{padding:9px 11px;font-size:12px}
+    .section-title{font-size:23px}
+    .seats{font-size:12px;white-space:nowrap}
+
+    .player-card{padding:19px}
+    .player-top{gap:10px}
+    .avatar{width:45px;height:45px;flex:0 0 45px}
+    .player-name{font-size:18px}
+    .loan-state{font-size:9px}
+    .cash-row{display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap}
+    .cash{font-size:31px}
+    .cash-row .head-btn{margin-left:auto}
+    .action-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .action{padding:12px 7px;font-size:12px;border-radius:15px}
+    .trash{font-size:18px}
+
+    .ledger-tools{display:grid;grid-template-columns:1fr;gap:8px}
+    .search,.filter{width:100%;padding:13px 14px}
+    .movement-head{padding:13px 15px;font-size:9px}
+    .movement-item{padding:14px 15px;gap:10px}
+    .move-left{min-width:0;gap:9px}
+    .move-icon{width:31px;height:31px;flex:0 0 31px}
+    .move-title{font-size:13px;line-height:1.25}
+    .move-sub{font-size:11px;line-height:1.3;word-break:break-word}
+    .amount{font-size:13px;white-space:nowrap}
+    .time{font-size:9px}
+    .entryCount{font-size:9px}
+
+    .modal{padding:12px}
+    .modal-box{width:100%;padding:22px;border-radius:22px;max-height:90vh;overflow:auto}
+    .modal-box h2{font-size:24px}
+    .modal-box input,.modal-box select{padding:13px}
+    .modal-actions{position:sticky;bottom:0;background:inherit;padding-top:5px}
+    .modal-actions button{padding:13px}
+  }
+
+  @media (max-width: 380px){
+    .app-head .brand-icon{display:none}
+    .app-brand h3{font-size:11px}
+    .toolbar .head-btn{padding:8px}
+    .title{font-size:34px}
+    .money{font-size:35px}
+    .cash{font-size:28px}
+    .action-row{grid-template-columns:1fr}
+    .cash-row .head-btn{margin-left:0;width:100%}
+    .green-badge{float:none;display:inline-block;margin-bottom:10px}
+  }
+
+
+  @media (max-width:650px){
+    #openDeskBtn{
+      display:block !important;
+      width:100% !important;
+      min-height:54px !important;
+      visibility:visible !important;
+      opacity:1;
+      position:relative;
+      z-index:2;
+      font-size:16px !important;
+    }
+    #openDeskBtn.disabled{
+      opacity:.72 !important;
+    }
+  }
+
+</style>
+</head>
+<body>
+
+<section id="setup" class="setup">
+  <div class="setup-head">
+    <div class="brand-icon">◎</div>
+    <div><div class="eyebrow" style="color:#f0f3f8">INTERNATIONAL BUSINESS</div><div class="sub-eyebrow">BANKER DESK / NEW TABLE</div></div>
+    <div class="ready">READY TO DEAL</div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-kicker">♢ &nbsp; A CALM LEDGER FOR A LOUD GAME</div>
+    <h1>Set the table.<br><span>Run the bank.</span></h1>
+    <p>Start a shared banker desk for International Business. Give every player their opening stake, then keep every transfer, property deal, and rent payment visible.</p>
+    <div class="stats">
+      <div class="stat"><label>BANK POOL</label><strong>$166.5k</strong></div>
+      <div class="stat"><label>OPENING STAKE</label><strong>$25k</strong></div>
+      <div class="stat"><label>MIN. MOVE</label><strong>$50</strong></div>
+    </div>
+  </div>
+
+  <div class="setup-card">
+    <div class="step">01 / PLAYERS</div>
+    <h2>Who is at the table?</h2>
+    <div id="setupPlayers"></div>
+    <div class="setup-actions">
+      <button class="outline" onclick="addSetupPlayer()">＋ &nbsp; Add another player</button>
+      <button id="openDeskBtn" class="primary disabled" onclick="openDesk()" disabled>Open banker desk &nbsp;›</button>
+    </div>
+    <div class="small-note">Starting cash is issued from the $166,500 Bank pool when you open the desk.</div>
+  </div>
+</section>
+
+<section id="app" class="app hidden">
+  <header class="app-head">
+    <div class="brand-icon light">♜</div>
+    <div class="app-brand"><h3>INTERNATIONAL BUSINESS</h3><p>BANKER CONTROL ROOM</p></div>
+    <div class="saved"><span class="dot"></span>Saved just now</div>
+    <div class="toolbar">
+      <button class="head-btn" onclick="undoLast()" title="Undo last">↶</button>
+      <button class="head-btn" onclick="toggleTheme()" title="Theme">☾</button>
+      <button class="head-btn restart" onclick="restart()">↻ &nbsp; Restart</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="topline">LIVE LEDGER / <span id="seatCount">2 SEATS ACTIVE</span></div>
+    <div class="title">The table is open.</div>
+    <p class="desc">Manage cash, document the deal, and keep the Bank's story straight from one shared desk.</p>
+    <button class="add-player" onclick="showAddPlayer()">＋ &nbsp; Add player &nbsp; <span id="seatBadge">2/4</span></button>
+
+    <div class="card vault">
+      <span class="green-badge">UNLIMITED RESERVE</span>
+      <div class="card-kicker" style="color:#d47b0b">◉ &nbsp; BANK VAULT</div>
+      <div class="money" id="bankBalance">$116,500</div>
+      <div class="muted">Available bank balance</div>
+      <div class="card-line"></div>
+      <div class="muted">Initial pool <span style="float:right;color:#263044">$166,500</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-kicker">CASH IN PLAY</div>
+      <div class="money" id="cashInPlay">$50,000</div>
+      <div class="muted">Across <span id="cashPlayerCount">2</span> player accounts</div>
+      <div class="progress"><i id="cashProgress"></i></div>
+    </div>
+
+    <div class="card purple-card">
+      <div class="card-kicker purple">WORLD BANK EXPOSURE <span style="float:right">▭</span></div>
+      <div class="money" id="exposure">$0</div>
+      <div class="muted">Outstanding across <span id="loanCount">0</span> players</div>
+      <div class="purple" style="margin-top:25px">● &nbsp; 6-lap repayment tracker · $10k loan = $12k repayment</div>
+    </div>
+
+    <div class="section-head">
+      <div><div class="card-kicker">PLAYER ACCOUNTS</div><h2 class="section-title">Cash positions</h2></div>
+      <div class="seats" id="seatsLabel">2 / 4 seats</div>
+    </div>
+    <div id="players"></div>
+
+    <div class="card purple-card" style="margin-top:32px">
+      <div class="card-kicker purple">WORLD BANK LEDGER</div>
+      <h2 class="section-title" style="margin-top:12px">Repayment watch</h2>
+      <div id="repaymentWatch" style="margin-top:22px;padding:28px;border:1px dashed #dfcffc;border-radius:20px;color:#6f7d95">No active World Bank loans. A clean book is a good book.</div>
+    </div>
+
+    <div class="section-head">
+      <div><div class="card-kicker">AUDIT TRAIL</div><h2 class="section-title">Recent movements</h2></div>
+      <button class="head-btn" onclick="undoLast()">↶ &nbsp; Undo last</button>
+    </div>
+    <div class="ledger-tools">
+      <input id="search" class="search" placeholder="⌕  Search ledger" oninput="renderLedger()" />
+      <select id="filter" class="filter" onchange="renderLedger()"><option value="all">All types</option><option value="cash">Cash</option><option value="loan">Loan</option><option value="repay">Repayment</option><option value="transfer">Transfer</option><option value="deal">Deal</option></select>
+    </div>
+    <div class="movement">
+      <div class="movement-head"><span>MOVEMENT</span><span>AMOUNT</span></div>
+      <div id="ledger"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;color:#718099;font-size:12px;letter-spacing:2px;padding:16px 7px"><span id="entryCount">0 ENTRIES SAVED</span><span>LIVE / SHARED</span></div>
+  </main>
+</section>
+
+<div id="modal" class="modal hidden">
+  <div class="modal-box">
+    <h2 id="modalTitle">Move cash</h2>
+    <div id="modalBody"></div>
+    <div class="modal-actions">
+      <button class="outline" style="color:#334052" onclick="closeModal()">Cancel</button>
+      <button class="primary" onclick="submitModal()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const INITIAL_BANK=166500, STARTING=25000, MAX_PLAYERS=4;
+let state={players:[],bank:INITIAL_BANK,ledger:[],history:[]};
+let setupNames=["Player 1","Player 2"];
+let modalAction=null;
+
+function money(n){return "$"+Math.round(n).toLocaleString("en-US")}
+function now(){return new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",hour12:false})}
+function snapshot(){state.history.push(JSON.stringify(state));if(state.history.length>30)state.history.shift()}
+function renderSetup(){
+  const el=document.getElementById("setupPlayers");el.innerHTML="";
+  setupNames.forEach((name,i)=>{
+    el.innerHTML+=`<div class="player-row">
+      <div class="pill ${i===1?'green':''}">P${i+1}</div>
+      <input value="${escapeHtml(name)}" oninput="setupNames[${i}]=this.value; updateOpenDeskButton()" placeholder="Player ${i+1} name"/>
+      ${setupNames.length>2?`<button class="x" onclick="removeSetupPlayer(${i})">×</button>`:""}
+    </div>`;
+  });
+  updateOpenDeskButton();
+}
+function updateOpenDeskButton(){
+  const btn=document.getElementById("openDeskBtn");
+  if(!btn)return;
+  const ready=setupNames.length>0 && setupNames.every(name=>String(name).trim().length>0);
+  btn.disabled=!ready;
+  btn.classList.toggle("disabled",!ready);
+  btn.classList.toggle("ready",ready);
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function addSetupPlayer(){if(setupNames.length<MAX_PLAYERS){setupNames.push("Player "+(setupNames.length+1));renderSetup()}}
+function removeSetupPlayer(i){setupNames.splice(i,1);renderSetup()}
+function openDesk(){
+  state.players=setupNames.map((name,i)=>({name:name.trim()||"Player "+(i+1),cash:STARTING,loan:0}));
+  state.bank=INITIAL_BANK-STARTING*state.players.length;state.ledger=[];
+  state.history=[];
+  state.players.forEach(p=>addLedger("Starting cash",`Bank → ${p.name}`,STARTING,"cash"));
+  document.getElementById("setup").classList.add("hidden");document.getElementById("app").classList.remove("hidden");
+  render();
+}
+function addLedger(title,sub,amount,type="cash"){
+  state.ledger.unshift({id:Date.now()+Math.random(),title,sub,amount,type,time:now()});
+}
+function render(){
+  document.getElementById("bankBalance").textContent=money(state.bank);
+  const inPlay=state.players.reduce((a,p)=>a+p.cash,0);
+  document.getElementById("cashInPlay").textContent=money(inPlay);
+  document.getElementById("cashPlayerCount").textContent=state.players.length;
+  document.getElementById("cashProgress").style.width=Math.min(100,inPlay/1665)+"%";
+  const loans=state.players.reduce((a,p)=>a+p.loan,0);
+  document.getElementById("exposure").textContent=money(loans);
+  document.getElementById("loanCount").textContent=state.players.filter(p=>p.loan>0).length;
+  document.getElementById("seatCount").textContent=state.players.length+" SEATS ACTIVE";
+  document.getElementById("seatBadge").textContent=state.players.length+"/4";
+  document.getElementById("seatsLabel").textContent=state.players.length+" / 4 seats";
+  document.getElementById("players").innerHTML=state.players.map((p,i)=>`
+    <div class="card player-card">
+      <div class="player-top"><div class="avatar ${i%2?'g':''}">PL</div><div><div class="player-name">${escapeHtml(p.name)}</div><div class="loan-state">${p.loan?'ACTIVE DEBT: '+money(p.loan):'NO ACTIVE LOAN'}</div></div><button class="trash" onclick="deletePlayer(${i})">♧</button></div>
+      <div class="cash-row"><div><div class="card-kicker">AVAILABLE CASH</div><div class="cash">${money(p.cash)}</div></div><button class="head-btn" onclick="moveCash(${i})">⇄ &nbsp; Move cash</button></div>
+      <div class="action-row"><button class="action loan" onclick="loanPlayer(${i})">▭ &nbsp; Loan $10k → repay $12k</button><button class="action repay" onclick="repayPlayer(${i})" ${p.loan<=0?'disabled':''}>▣ &nbsp; Repay $2k</button></div>
+    </div>`).join("");
+  const watch=document.getElementById("repaymentWatch");
+  const active=state.players.filter(p=>p.loan>0);
+  watch.innerHTML=active.length?active.map(p=>`<div style="display:flex;justify-content:space-between;padding:10px 0"><b>${escapeHtml(p.name)}</b><span class="purple">${money(p.loan)} outstanding</span></div>`).join(""):"No active World Bank loans. A clean book is a good book.";
+  renderLedger();
+}
+function renderLedger(){
+  const q=document.getElementById("search").value.toLowerCase(), f=document.getElementById("filter").value;
+  const items=state.ledger.filter(x=>(f==="all"||x.type===f)&&(`${x.title} ${x.sub}`.toLowerCase().includes(q)));
+  document.getElementById("ledger").innerHTML=items.map(x=>`
+    <div class="movement-item"><div class="move-left"><div class="move-icon">${x.type==="loan"?"▭":x.type==="repay"?"↗":"↙"}</div><div><div class="move-title">${escapeHtml(x.title)}</div><div class="move-sub">${escapeHtml(x.sub)}</div></div></div><div class="amount">${x.amount>=0?"+":""}${money(x.amount)}<span class="time">${x.time}</span></div></div>`).join("") || `<div style="padding:35px;text-align:center;color:#77869c">No matching ledger entries.</div>`;
+  document.getElementById("entryCount").textContent=state.ledger.length+" ENTRIES SAVED";
+}
+function showModal(title,body,action){document.getElementById("modalTitle").textContent=title;document.getElementById("modalBody").innerHTML=body;modalAction=action;document.getElementById("modal").classList.remove("hidden")}
+function closeModal(){document.getElementById("modal").classList.add("hidden");modalAction=null}
+function submitModal(){if(modalAction)modalAction();closeModal()}
+function moveCash(i){
+  showModal("Move cash",`<label>Move cash</label>
+    <select id="moveTarget" onchange="updateMoveTarget()">
+      ${state.players.map((p,j)=>`<option value="player:${j}" ${j!==i?"":"selected"}>${escapeHtml(p.name)} — Player</option>`).join("")}
+      <option value="bank">Bank</option>
+    </select>
+    <div id="moveBankDirection" class="hidden">
+      <label>Bank action</label>
+      <select id="bankDirection">
+        <option value="take">Take cash from Bank (+)</option>
+        <option value="pay">Pay cash to Bank (-)</option>
+      </select>
+    </div>
+    <div id="movePlayerTarget">
+      <label>Send from</label>
+      <select id="from">${state.players.map((p,j)=>`<option value="${j}" ${j===i?"selected":""}>${escapeHtml(p.name)} — ${money(p.cash)}</option>`).join("")}</select>
+      <label>Send to</label>
+      <select id="to">${state.players.map((p,j)=>`<option value="${j}" ${j!==i?"selected":""}>${escapeHtml(p.name)}</option>`).join("")}</select>
+    </div>
+    <label>Amount</label>
+    <input id="amount" type="number" min="50" step="50" value="500"/>
+    <label>Reason <span style="color:#8894a7">(optional for player-to-player)</span></label>
+    <input id="moveReason" maxlength="60" value="" placeholder="Reward, penalty, rent, transfer..."/>`,
+    ()=>{
+      const target=document.getElementById("moveTarget").value;
+      const n=+document.getElementById("amount").value;
+      if(n<50 || !Number.isFinite(n)) return alert("Enter an amount of at least $50.");
+
+      if(target==="bank"){
+        const direction=document.getElementById("bankDirection").value;
+        const reason=document.getElementById("moveReason").value.trim() ||
+          (direction==="take" ? "Bank payment" : "Bank payment");
+
+        if(direction==="pay"){
+          if(state.players[i].cash<n)return alert("Player does not have enough cash.");
+          snapshot();
+          state.players[i].cash-=n;
+          state.bank+=n;
+          addLedger(reason,`${state.players[i].name} → Bank`,n,"cash");
+        }else{
+          if(state.bank<n)return alert("Bank does not have enough cash.");
+          snapshot();
+          state.bank-=n;
+          state.players[i].cash+=n;
+          addLedger(reason,`Bank → ${state.players[i].name}`,n,"cash");
+        }
+      }else{
+        const a=+document.getElementById("from").value;
+        const b=+document.getElementById("to").value;
+        if(a===b||n>state.players[a].cash)return alert("Check the players and amount.");
+        snapshot();
+        state.players[a].cash-=n;
+        state.players[b].cash+=n;
+        addLedger(document.getElementById("moveReason").value.trim() || "Cash transfer",
+          `${state.players[a].name} → ${state.players[b].name}`,n,"transfer");
+      }
+      render();
+    });
+  updateMoveTarget();
+}
+function updateMoveTarget(){
+  const bank=document.getElementById("moveTarget").value==="bank";
+  document.getElementById("moveBankDirection").classList.toggle("hidden",!bank);
+  document.getElementById("movePlayerTarget").classList.toggle("hidden",bank);
+}
+function loanPlayer(i){
+  // Player receives $10,000 cash but owes $12,000 total.
+  if(state.bank<10000)return alert("Not enough bank cash.");
+  snapshot();
+  state.bank-=10000;
+  state.players[i].cash+=10000;
+  state.players[i].loan+=12000;
+  addLedger("World Bank loan",`Bank → ${state.players[i].name} · $10,000 received / $12,000 owed`,10000,"loan");
+  render();
+}
+function repayPlayer(i){
+  // Repay in $2,000 installments until the full $12,000 debt is cleared.
+  const n=Math.min(2000,state.players[i].loan);
+  if(state.players[i].cash<n)return alert("Player does not have enough cash.");
+  snapshot();
+  state.players[i].cash-=n;
+  state.players[i].loan-=n;
+  state.bank+=n;
+  addLedger("Loan repayment",`${state.players[i].name} → Bank · ${money(state.players[i].loan)} remaining`,n,"repay");
+  render();
+}
+function deletePlayer(i){
+  if(state.players.length<=1)return;
+  if(!confirm("Remove "+state.players[i].name+" from the table?"))return;
+  snapshot();const p=state.players.splice(i,1)[0];state.bank+=p.cash;addLedger("Player removed",`${p.name} → Bank`,p.cash,"cash");render();
+}
+function showAddPlayer(){
+  if(state.players.length>=4)return alert("Maximum 4 players.");
+  showModal("Add player",`<label>Player name</label><input id="newName" value="Player ${state.players.length+1}" maxlength="30"/>`,()=>{
+    const name=document.getElementById("newName").value.trim()||"Player "+(state.players.length+1);
+    if(state.bank<STARTING)return alert("Not enough bank cash for the opening stake.");
+    snapshot();state.players.push({name,cash:STARTING,loan:0});state.bank-=STARTING;addLedger("Starting cash",`Bank → ${name}`,STARTING,"cash");render();
+  });
+}
+function undoLast(){
+  if(!state.history.length)return;
+  state=JSON.parse(state.history.pop());render();
+}
+function restart(){
+  if(!confirm("Restart the table and clear the current ledger?"))return;
+  document.getElementById("app").classList.add("hidden");document.getElementById("setup").classList.remove("hidden");
+  setupNames=state.players.map(p=>p.name);if(!setupNames.length)setupNames=["Player 1","Player 2"];renderSetup();
+}
+function toggleTheme(){
+  const isDark=document.body.classList.toggle("dark");
+  localStorage.setItem("bankerDeskDark",isDark?"1":"0");
+  const btn=document.querySelector('.app-head .toolbar .head-btn:nth-child(2)');
+  if(btn)btn.textContent=isDark?"☀":"☾";
+}
+function loadTheme(){
+  const isDark=localStorage.getItem("bankerDeskDark")==="1";
+  if(isDark)document.body.classList.add("dark");
+  const btn=document.querySelector('.app-head .toolbar .head-btn:nth-child(2)');
+  if(btn)btn.textContent=isDark?"☀":"☾";
+}
+renderSetup();
+loadTheme();
+</script>
+</body>
+</html>
